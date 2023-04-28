@@ -11,11 +11,11 @@ const Register = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const {registerWithEmailAndPassword} = useContext(AuthContext);
+    const {createUser} = useContext(AuthContext);
 
-    const handleOnSubmit = e =>{
-        e.preventDefault()
-        const form = e.target;
+    const handleRegister = event =>{
+        event.preventDefault()
+        const form = event.target;
         const name = form.name.value;
         const photo = form.photo.value;
         const email = form.email.value;
@@ -24,31 +24,33 @@ const Register = () => {
         console.log(password);
         setError('')
 
-        if(!/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(photo)){
-            e.target.photo.focus();
-            toast.error("Provide a valide Photo URL");
-            return;
-        };
+        // if(!/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(photo)){
+        //     event.target.photo.focus();
+        //     toast.error("Provide a valide Photo URL");
+        //     return;
+        // };
 
-        if(!/^\w+([-+.']\w+)*@[A-Za-z\d]+\.com$/.test(email)){
-            e.target.email.focus();
-            toast.error("Provide a valide email");
-            return;
-        };
+        // if(!/^\w+([-+.']\w+)*@[A-Za-z\d]+\.com$/.test(email)){
+        //     event.target.email.focus();
+        //     toast.error("Provide a valide email");
+        //     return;
+        // };
 
-        if(!/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)){
-            e.target.password.focus();
-            toast.error("Provide a valid password");
-            setError('please provide a password with at least a symbol, upper and lower case letters and a number min 8 letter password');
-            return;
-        };
+        // if(!/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)){
+        //     event.target.password.focus();
+        //     toast.error("Provide a valid password");
+        //     setError('please provide a password with at least a symbol, upper and lower case letters and a number min 8 letter password');
+        //     return;
+        // };
 
 
-        registerWithEmailAndPassword(email, password)
+        createUser(email, password)
         .then(result=>{
-            const loggedUser = result.user;
-            console.log(loggedUser);
-            updateProfile(loggedUser,{
+            const createdUser = result.user;
+            setSuccess('registation successfull')
+            console.log(createdUser);
+            toast.success('registation successfull')
+            updateProfile(createdUser,{
                 displayName: name,
                 photoURL: photo
             })
@@ -59,6 +61,7 @@ const Register = () => {
             const message = error.message;
             console.log(error);
             setError(message)
+            toast.error(message)
         })
 
         form.reset()
@@ -69,7 +72,7 @@ const Register = () => {
     return (
         <Container className='w-25'>
             <h3>Please login</h3>
-            <Form onSubmit={handleOnSubmit}>
+            <Form onSubmit={handleRegister}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Your Name</Form.Label>
                     <Form.Control type="text" name='name' placeholder="Enter Your name" required />
@@ -103,7 +106,7 @@ const Register = () => {
                 </Form.Text>
                 <br />
                 <Form.Text className="text-sucendary">
-                    We'll never share your email with anyone else.
+                    {success}
                 </Form.Text>
                 <br />
                 <Form.Text className="text-danger">
