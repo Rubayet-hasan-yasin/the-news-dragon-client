@@ -2,7 +2,7 @@ import React from 'react';
 import { useContext } from 'react';
 import { useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../AuthProvider/AuthProvider';
 import { toast } from 'react-hot-toast';
 
@@ -11,8 +11,12 @@ const Login = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
+    const navigate = useNavigate();
+
     const {signIn} = useContext(AuthContext);
 
+    const location = useLocation()
+    const from = location.state?.from?.pathname || '/category/0';
 
     const handleLogin = e => {
         e.preventDefault()
@@ -43,6 +47,7 @@ const Login = () => {
             console.log(loggedUser)
             setSuccess('Successfully Login')
             toast.success('Successfully Login!')
+            navigate(from, {replace: true})
         })
         .catch(error=>{
             const message = error.message;

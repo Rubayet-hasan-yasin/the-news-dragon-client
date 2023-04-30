@@ -10,6 +10,7 @@ import { updateProfile } from 'firebase/auth';
 const Register = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [accepted, setAccepted] = useState(false);
 
     const {createUser} = useContext(AuthContext);
 
@@ -68,6 +69,10 @@ const Register = () => {
 
 
     }
+
+    const handleAccepted = event => {
+        setAccepted(event.target.checked)
+    }
     
     return (
         <Container className='w-25'>
@@ -94,9 +99,13 @@ const Register = () => {
                     <Form.Control type="password" name='password' placeholder="Password" required />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" name='accept' label="Check me out" />
+                    <Form.Check 
+                    onClick={handleAccepted}
+                    type="checkbox" 
+                    name='accept' 
+                    label={<>Accept <Link to="/terms">Terms and conditions</Link></>} />
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button disabled={!accepted} variant="primary" type="submit">
                     Register
                 </Button>
                 <br />
